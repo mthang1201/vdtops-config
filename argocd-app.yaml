@@ -1,0 +1,54 @@
+apiVersion: argoproj.io/v1alpha1
+kind: Application
+metadata:
+  name: my-app-dev
+  namespace: argocd
+  finalizers:
+    # Automatically clean up Kubernetes resources when deleting the ArgoCD application
+    - resources-finalizer.argocd.argoproj.io
+spec:
+  project: default
+
+  # =========================================================================
+  # OPTION A: Modern GitOps Multi-Source (Recommended for ArgoCD v2.6+)
+  # Allows templates to live in 'app-repo' and overrides in 'config-repo'.
+  # =========================================================================
+  sources:
+    # Source 1: The App Repository containing the Helm chart templates
+    - repoURL: 'https://github.com/mthang1201/app-repo.git'
+      targetRevision: HEAD
+      path: app-repo/charts/my-app
+      helm:
+        valueFiles:
+          # Pull values from the config source (referenced below with the '$config' prefix)
+          - '$config/config-repo/dev/values.yaml'
+
+    # Source 2: The Config Repository containing environment-specific values
+    - repoURL: 'https://github.com/mthang1201/config-repo.git'
+      targetRevision: HEAD
+      ref: config
+
+  # =========================================================================
+  # OPTION B: Classic Single-Source Fallback (Uncomment if using ArgoCD <2.6)
+  # If using this, copy the 'charts/my-app' directory into the 'config-repo'
+  # alongside 'dev/values.yaml', and let ArgoCD point directly to config-repo.
+  # =========================================================================
+  # source:
+  #   repoURL: 'https://github.com/mthang1201/config-repo.git'
+  #   targetRevision: HEAD
+  #   path: config-repo/charts/my-app
+  #   helm:
+  #     valueFiles:
+  #       - ../dev/values.yaml
+
+  destination:
+    server: 'https://kubernetes.default.svc'
+    namespace: dev # Automatically deploys application microservices into the 'dev' namespace
+
+  syncPolicy:
+    automated:
+      prune: true     # Automatically deletes Kubernetes resources that are no longer in Git
+      selfHeal: true   # Overwrites manual changes in Kubernetes with the configurations in Git
+    syncOptions:
+      - CreateNamespace=true  # Automatically creates the 'dev' namespace if it does not exist
+      - ApplyOutOfSyncOnly=true

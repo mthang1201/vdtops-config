@@ -1,0 +1,21 @@
+# =========================================================
+# Viettel Digital Talent Cloud 2026 - Development Environment
+# Dynamic Values Override File for GitOps Pipeline Sync
+# =========================================================
+
+# Frontend overrides
+web:
+  image: "docker.io/mthang1201/vdtops-web" # Replace 'vdtops' with your Docker Hub username
+  tag: "v1.0.1"                 # Automatically updated by Jenkins Stage 8
+  replicas: 1                   # Run 1 replica in dev to conserve Minikube resources
+
+# Backend overrides
+api:
+  image: "docker.io/mthang1201/vdtops-api" # Replace 'vdtops' with your Docker Hub username
+  tag: "v1.0.1"                 # Automatically updated by Jenkins Stage 8
+  replicas: 1                   # Run 1 replica in dev to conserve Minikube resources
+
+# Ingress overrides
+ingress:
+  enabled: true
+  host: "vdt-app.local"         # Map this to Minikube IP in /etc/hosts for testing

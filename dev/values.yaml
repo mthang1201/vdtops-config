@@ -6,13 +6,13 @@
 # Frontend overrides
 web:
   image: "docker.io/mthang1201/vdtops-web" # Replace 'vdtops' with your Docker Hub username
-  tag: "v1.0.1"                 # Automatically updated by Jenkins Stage 8
+  tag: "v1.0.1-072859f"
   replicas: 1                   # Run 1 replica in dev to conserve Minikube resources
 
 # Backend overrides
 api:
   image: "docker.io/mthang1201/vdtops-api" # Replace 'vdtops' with your Docker Hub username
-  tag: "v1.0.1"                 # Automatically updated by Jenkins Stage 8
+  tag: "v1.0.1-072859f"
   replicas: 1                   # Run 1 replica in dev to conserve Minikube resources
 
 # Ingress overrides

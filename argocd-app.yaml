@@ -17,11 +17,11 @@ spec:
     # Source 1: The App Repository containing the Helm chart templates
     - repoURL: 'https://github.com/mthang1201/vdtops-app.git'
       targetRevision: HEAD
-      path: app-repo/charts/my-app
+      path: charts/my-app
       helm:
         valueFiles:
           # Pull values from the config source (referenced below with the '$config' prefix)
-          - '$config/config-repo/dev/values.yaml'
+          - '$config/dev/values.yaml'
 
     # Source 2: The Config Repository containing environment-specific values
     - repoURL: 'https://github.com/mthang1201/vdtops-config.git'
